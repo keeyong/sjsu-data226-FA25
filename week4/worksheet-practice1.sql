@@ -1,13 +1,12 @@
 /*
 CREATE DATABASE IF NOT EXISTS dev;
 
-CREATE SCHEMA IF NOT EXISTS dev.adhoc;
 CREATE SCHEMA IF NOT EXISTS dev.raw;
 CREATE SCHEMA IF NOT EXISTS dev.analytics;
 */
 
 -- The following SQLs assume you have a database named "dev"
-
+CREATE SCHEMA IF NOT EXISTS dev.adhoc;
 CREATE OR REPLACE TABLE dev.adhoc.count_test (
     value int
 );
@@ -25,10 +24,10 @@ ALTER TABLE dev.adhoc.count_test RENAME COLUMN value to v;
 
 -- if I want to update NULL value to 100 in every records
 UPDATE dev.adhoc.count_test
-SET value = 100
-WHERE value is NULL;
+SET v = 100
+WHERE v is NULL;
 
-DELETE FROM dev.adhoc.count_test WHERE value = 0;
+DELETE FROM dev.adhoc.count_test WHERE v = 0;
 
 -- DROP TABLE
 DROP TABLE dev.adhoc.count_test;
