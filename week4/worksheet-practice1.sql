@@ -1,8 +1,12 @@
+/*
 CREATE DATABASE IF NOT EXISTS dev;
 
 CREATE SCHEMA IF NOT EXISTS dev.adhoc;
 CREATE SCHEMA IF NOT EXISTS dev.raw;
 CREATE SCHEMA IF NOT EXISTS dev.analytics;
+*/
+
+-- The following SQLs assume you have a database named "dev"
 
 CREATE OR REPLACE TABLE dev.adhoc.count_test (
     value int
