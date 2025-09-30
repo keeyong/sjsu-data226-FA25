@@ -1,4 +1,3 @@
-# In Cloud Composer, add snowflake-connector-python to PYPI Packages
 from airflow import DAG
 from airflow.models import Variable
 from airflow.decorators import task
@@ -14,14 +13,17 @@ def return_snowflake_conn():
     user_id = Variable.get('snowflake_userid')
     password = Variable.get('snowflake_password')
     account = Variable.get('snowflake_account')
+    database = Variable.get('snowflake_database')
+    warehouse = Variable.get('snowflake_warehouse')
 
     # Establish a connection to Snowflake
     conn = snowflake.connector.connect(
         user=user_id,
         password=password,
-        account=account,  # Example: 'xyz12345.us-east-1'
-        warehouse='compute_wh',
-        database='dev'
+        account=account,  # Example: 'sfedu02-lvb17920'
+        warehouse=warehouse,
+        database=database,
+        role="TRAINING_ROLE"
     )
     # Create a cursor object
     return conn.cursor()
@@ -65,12 +67,12 @@ def load(records, target_table):
 
 with DAG(
     dag_id = 'CountryCaptial',
-    start_date = datetime(2025,2,21),
+    start_date = datetime(2025,9,29),
     catchup=False,
     tags=['ETL'],
     schedule = '0 2 * * *'
 ) as dag:
-    target_table = "dev.raw.country_capital"
+    target_table = "raw.country_capital"
     url = Variable.get("country_capital_url")
 
     data = extract(url)
