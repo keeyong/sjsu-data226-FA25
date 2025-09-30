@@ -1,4 +1,3 @@
-# In Cloud Composer, add snowflake-connector-python to PYPI Packages
 from airflow import DAG
 from airflow.models import Variable
 from airflow.decorators import task
