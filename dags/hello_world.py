@@ -25,7 +25,7 @@ default_args = {
 
 with DAG(
     dag_id = 'HelloWorld',
-    start_date = datetime(2024,9,25),
+    start_date = datetime(2025,9,25),
     catchup=False,
     tags=['example'],
     schedule = '0 2 * * *',
