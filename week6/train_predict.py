@@ -87,12 +87,11 @@ with DAG(
     schedule = '30 2 * * *'
 ) as dag:
 
-    database = "dev"  # change this according to your environment
-    train_input_table = f"{database}.raw.market_data"
-    train_view = f"{database}.adhoc.market_data_view"
-    forecast_table = f"{database}.adhoc.market_data_forecast"
-    forecast_function_name = f"{database}.analytics.predict_stock_price"
-    final_table = f"{database}.analytics.market_data"
+    train_input_table = "raw.market_data"
+    train_view = "adhoc.market_data_view"
+    forecast_table = "adhoc.market_data_forecast"
+    forecast_function_name = "analytics.predict_stock_price"
+    final_table = "analytics.market_data"
     cur = return_snowflake_conn()
 
     train_task = train(cur, train_input_table, train_view, forecast_function_name)
