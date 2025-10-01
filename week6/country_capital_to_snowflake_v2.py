@@ -63,7 +63,7 @@ with DAG(
     tags=['ETL'],
     schedule = '30 2 * * *'
 ) as dag:
-    target_table = "dev.raw.country_capital"
+    target_table = "raw.country_capital"
     url = Variable.get("country_capital_url")
     
     data = extract(url)
