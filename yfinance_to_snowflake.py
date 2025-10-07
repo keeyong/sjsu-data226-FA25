@@ -108,12 +108,12 @@ def load(file_path, database, schema, target_table):
 
 with DAG(
     dag_id = 'YfinanceToSnowflake',
-    start_date = datetime(2025,2,27),
+    start_date = datetime(2025,10,5),
     catchup=False,
     tags=['ETL'],
     schedule = '30 2 * * *'
 ) as dag:
-    database = "dev"
+    database = "user_db_raccoon"  # change this to your database accordingly
     schema = "raw"
     target_table = "stock_price"
     symbol = "AAPL"
