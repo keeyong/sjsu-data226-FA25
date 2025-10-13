@@ -15,7 +15,7 @@ This pipeline assumes that there are two other tables in your snowflake DB
  - session_timestamp
 
 With regard to how to set up these two tables, please refer to this README file:
- - https://github.com/keeyong/sjsu-data226-SP25/blob/main/week8/How-to-setup-ETL-tables-for-ELT.md
+ - https://github.com/keeyong/sjsu-data226-FA25/blob/main/week8/How-to-setup-ETL-tables-for-ELT.md
 """
 
 def return_snowflake_conn():
@@ -29,7 +29,7 @@ def return_snowflake_conn():
 
 
 @task
-def run_ctas(database, schema, table, select_sql, primary_key=None):
+def run_ctas(schema, table, select_sql, primary_key=None):
 
     logging.info(table)
     logging.info(select_sql)
@@ -37,7 +37,7 @@ def run_ctas(database, schema, table, select_sql, primary_key=None):
     cur = return_snowflake_conn()
 
     try:
-        sql = f"CREATE OR REPLACE TABLE {database}.{schema}.temp_{table} AS {select_sql}"
+        sql = f"CREATE OR REPLACE TABLE {schema}.temp_{table} AS {select_sql}"
         logging.info(sql)
         cur.execute(sql)
 
@@ -45,7 +45,7 @@ def run_ctas(database, schema, table, select_sql, primary_key=None):
         if primary_key is not None:
             sql = f"""
               SELECT {primary_key}, COUNT(1) AS cnt 
-              FROM {database}.{schema}.temp_{table}
+              FROM {schema}.temp_{table}
               GROUP BY 1
               ORDER BY 2 DESC
               LIMIT 1"""
@@ -58,11 +58,11 @@ def run_ctas(database, schema, table, select_sql, primary_key=None):
                 raise Exception(f"Primary key uniqueness failed: {result}")
             
         main_table_creation_if_not_exists_sql = f"""
-            CREATE TABLE IF NOT EXISTS {database}.{schema}.{table} AS
-            SELECT * FROM {database}.{schema}.temp_{table} WHERE 1=0;"""
+            CREATE TABLE IF NOT EXISTS {schema}.{table} AS
+            SELECT * FROM {schema}.temp_{table} WHERE 1=0;"""
         cur.execute(main_table_creation_if_not_exists_sql)
 
-        swap_sql = f"""ALTER TABLE {database}.{schema}.{table} SWAP WITH {database}.{schema}.temp_{table};"""
+        swap_sql = f"""ALTER TABLE {schema}.{table} SWAP WITH {schema}.temp_{table};"""
         cur.execute(swap_sql)
     except Exception as e:
         raise
@@ -76,12 +76,11 @@ with DAG(
     schedule = '45 2 * * *'
 ) as dag:
 
-    database = "dev"
     schema = "analytics"
     table = "session_summary"
     select_sql = """SELECT u.*, s.ts
-    FROM dev.raw.user_session_channel u
-    JOIN dev.raw.session_timestamp s ON u.sessionId=s.sessionId
+    FROM raw.user_session_channel u
+    JOIN raw.session_timestamp s ON u.sessionId=s.sessionId
     """
 
-    run_ctas(database, schema, table, select_sql, primary_key='sessionId')
+    run_ctas(schema, table, select_sql, primary_key='sessionId')
