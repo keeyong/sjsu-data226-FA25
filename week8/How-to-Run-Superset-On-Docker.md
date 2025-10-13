@@ -4,7 +4,7 @@ This will only 2 containers so it uses far less memory. After making sure the Do
 
 1. Clone the sjsu-data226-FA25 repo to the folder
 ```
-git clone https://github.com/keeyong/sjsu-data226-SP25.git
+git clone https://github.com/keeyong/sjsu-data226-FA25.git
 ```
 
 2. Change the current directory to sjsu-data226-FA25/week8
